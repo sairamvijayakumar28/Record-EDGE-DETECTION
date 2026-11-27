@@ -1,14 +1,14 @@
-# Edge Detection Using OpenCV
+# Edge Detection using Sobel, Roberts, Prewitt, Laplacian and Canny
 
-## 🎯 Aim
+## Aim
 
-To perform edge detection using Sobel, Roberts, Prewitt, Laplacian, and Canny edge detection techniques using OpenCV.
+To perform edge detection using **Sobel, Roberts, Prewitt, Laplacian, and Canny edge detectors**.
 
-## 🛠️ Software Required
+## Software Required
 
 - Anaconda – Python 3.7
 - Jupyter Notebook / VS Code
-- OpenCV (`cv2`)
+- OpenCV (cv2)
 - NumPy
 - Matplotlib
 
@@ -18,52 +18,145 @@ To perform edge detection using Sobel, Roberts, Prewitt, Laplacian, and Canny ed
 
 **Step 2:** Load an image using `cv2.imread()`.
 
-**Step 3:** Convert the input image into grayscale.
+**Step 3:** Convert the image to grayscale.
 
-**Step 4:** Apply the **Sobel operator** using OpenCV to detect edges.
+**Step 4:** Apply **Sobel operator** using OpenCV to detect edges.
 
-**Step 5:** Apply the **Prewitt operator** using custom kernels.
+**Step 5:** Apply **Prewitt operator** using custom kernels.
 
-**Step 6:** Apply the **Roberts operator** using custom kernels.
+**Step 6:** Apply **Roberts operator** using custom kernels.
 
-**Step 7:** Apply the **Laplacian operator** using OpenCV.
+**Step 7:** Apply **Laplacian operator** using OpenCV.
 
-**Step 8:** Apply the **Canny edge detector** using OpenCV.
+**Step 8:** Apply **Canny edge detector** using OpenCV.
 
 **Step 9:** Display all edge-detected images for comparison.
 
-## 👨‍💻 Developed By
+**Output:**
+```python
+# Step 1: Import all the necessary modules
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+```
 
-- **Name:** ______________________________
-- **Register No:** ________________________
+```python
+# Step 2: Load an image using cv2.imread()
+image = cv2.imread('D:\college\DIPT\moto.jpeg')
 
-## 📸 Output
+if image is None:
+    raise FileNotFoundError("moto.jpeg was not found. Place moto.jpeg in the same folder as this notebook.")
 
-### 1. Sobel Edge Detector
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+```
 
-- Detects edges in horizontal and vertical directions.
-- Produces a gradient-based edge map.
 
-### 2. Prewitt Edge Detector
+```python
+# Step 3: Convert the image to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-- Uses simpler kernels compared to Sobel.
-- Detects directional edges.
+plt.figure(figsize=(6, 5))
+plt.imshow(gray, cmap='gray')
+plt.title('Grayscale Image')
+plt.axis('off')
+plt.show()
+```
 
-### 3. Roberts Edge Detector
+**Rendered output:**
 
-- Detects edges using diagonal gradients.
-- Sensitive to noise.
 
-### 4. Laplacian Edge Detector
 
-- Detects edges using second-order derivatives.
-- Highlights rapid intensity changes.
 
-### 5. Canny Edge Detector
+<img width="485" height="324" alt="image" src="https://github.com/user-attachments/assets/b07c7db8-1315-4901-96b1-f4fcca476ed0" />
 
-- Uses a multi-stage edge detection process.
-- Produces clean and thin edges.
 
-## ✅ Result
+```python
+# Step 4: Apply Sobel operator
+sobel_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+sobel_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+sobel = cv2.magnitude(sobel_x, sobel_y)
+sobel = cv2.convertScaleAbs(sobel)
+```
 
-Thus, edges were successfully detected using Sobel, Prewitt, Roberts, Laplacian, and Canny edge detection techniques. Each method highlights edges differently based on gradient and intensity variations, improving feature extraction and image analysis.
+```python
+# Step 5: Apply Prewitt operator using custom kernels
+prewitt_x = np.array([[-1, 0, 1],
+                      [-1, 0, 1],
+                      [-1, 0, 1]], dtype=np.float32)
+
+prewitt_y = np.array([[-1, -1, -1],
+                      [ 0,  0,  0],
+                      [ 1,  1,  1]], dtype=np.float32)
+
+px = cv2.filter2D(gray, cv2.CV_32F, prewitt_x)
+py = cv2.filter2D(gray, cv2.CV_32F, prewitt_y)
+prewitt = cv2.magnitude(px, py)
+prewitt = cv2.convertScaleAbs(prewitt)
+```
+
+```python
+# Step 6: Apply Roberts operator using custom kernels
+roberts_x = np.array([[1, 0],
+                      [0, -1]], dtype=np.float32)
+
+roberts_y = np.array([[0, 1],
+                      [-1, 0]], dtype=np.float32)
+
+rx = cv2.filter2D(gray, cv2.CV_32F, roberts_x)
+ry = cv2.filter2D(gray, cv2.CV_32F, roberts_y)
+roberts = cv2.magnitude(rx, ry)
+roberts = cv2.convertScaleAbs(roberts)
+```
+
+```python
+# Step 7: Apply Laplacian operator
+laplacian = cv2.Laplacian(gray, cv2.CV_64F)
+laplacian = cv2.convertScaleAbs(laplacian)
+```
+
+```python
+# Step 8: Apply Canny edge detector
+canny = cv2.Canny(gray, 100, 200)
+```
+
+```python
+# Step 9: Display all edge-detected images for comparison
+plt.figure(figsize=(15, 10))
+
+plt.subplot(2, 3, 1)
+plt.imshow(image_rgb)
+plt.title('Original Image')
+plt.axis('off')
+
+plt.subplot(2, 3, 2)
+plt.imshow(sobel, cmap='gray')
+plt.title('Sobel Edge Detection')
+plt.axis('off')
+
+plt.subplot(2, 3, 3)
+plt.imshow(prewitt, cmap='gray')
+plt.title('Prewitt Edge Detection')
+plt.axis('off')
+
+plt.subplot(2, 3, 4)
+plt.imshow(roberts, cmap='gray')
+plt.title('Roberts Edge Detection')
+plt.axis('off')
+
+plt.subplot(2, 3, 5)
+plt.imshow(laplacian, cmap='gray')
+plt.title('Laplacian Edge Detection')
+plt.axis('off')
+
+plt.subplot(2, 3, 6)
+plt.imshow(canny, cmap='gray')
+plt.title('Canny Edge Detection')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+```
+
+**Rendered output:**
+
+<img width="1490" height="765" alt="image" src="https://github.com/user-attachments/assets/205c2f3b-8474-4c40-9c8c-04eaaac1e3d2" />
