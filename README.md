@@ -32,6 +32,8 @@ To perform edge detection using **Sobel, Roberts, Prewitt, Laplacian, and Canny 
 
 **Step 9:** Display all edge-detected images for comparison.
 
+## Name:Sairam V
+## Reg NO:212225230237
 **Output:**
 ```python
 # Step 1: Import all the necessary modules
